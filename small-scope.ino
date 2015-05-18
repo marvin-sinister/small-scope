@@ -46,6 +46,8 @@ volatile  boolean freeze;
 
              char commandBuffer[COMBUFFERSIZE+1];
 
+         uint16_t newWaitDuration;
+
 //-----------------------------------------------------------------------------
 // Main routines
 //-----------------------------------------------------------------------------
@@ -62,7 +64,8 @@ void setup (void) {		// Setup of the microcontroller
 	memset( (void *)commandBuffer, 0, sizeof(commandBuffer) );
 	ADCCounter = 0;
 
-	waitDuration = 256;
+	waitDuration = 768;
+	newWaitDuration = waitDuration;
 	stopIndex = -1;
 	freeze = false;
 
@@ -102,6 +105,10 @@ void loop (void) {
 		Serial.write( (uint8_t *)ADCBuffer, stopIndex );
 
 		freeze = false;
+
+		if (newWaitDuration != waitDuration) {
+			waitDuration = newWaitDuration;
+		}
 
 		// Time to prebuffer the next frame
 		waitRemaining = ADCBUFFERSIZE - waitDuration;
@@ -184,9 +191,9 @@ void loop (void) {
 				fillBuffer( commandBuffer, COMBUFFERSIZE );
 
 				// Convert buffer to integer
-				uint8_t newW = atoi( commandBuffer );
+				uint16_t newW = atoi( commandBuffer );
 
-				waitDuration = newW;
+				newWaitDuration = newW;
 				}
 				break;
 
