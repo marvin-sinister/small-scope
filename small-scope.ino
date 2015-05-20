@@ -66,7 +66,7 @@ void setup (void) {		// Setup of the microcontroller
 
 	waitDuration = 768;
 	newWaitDuration = waitDuration;
-	stopIndex = -1;
+	stopIndex = ADCBUFFERSIZE + 1;
 	freeze = false;
 
 	prescaler = 32;
@@ -106,10 +106,11 @@ void loop (void) {
 
 		freeze = false;
 
+		stopIndex = ADCBUFFERSIZE + 1;
+
 		if (newWaitDuration != waitDuration) {
 			waitDuration = newWaitDuration;
 		}
-
 		// Time to prebuffer the next frame
 		waitRemaining = ADCBUFFERSIZE - waitDuration;
 
