@@ -47,6 +47,7 @@ volatile  boolean freeze;
              char commandBuffer[COMBUFFERSIZE+1];
 
          uint16_t newWaitDuration;
+          boolean isContinuous;
 
 //-----------------------------------------------------------------------------
 // Main routines
@@ -73,6 +74,8 @@ void setup (void) {		// Setup of the microcontroller
 	triggerEvent = 2;
 
 	threshold = 128;
+
+	isContinuous = false;
 
 	// Activate interrupts
 	sei();
@@ -116,7 +119,14 @@ void loop (void) {
 
 
 		startADC();
-		startAnalogComparator();
+
+		if (!isContinuous) {
+			startAnalogComparator();
+		}
+		else {
+			stopIndex = ADCCounter + waitDuration;
+			if (stopIndex >= ADCBUFFERSIZE) stopIndex -= ADCBUFFERSIZE;
+		}
 
 		#if DEBUG == 1
 		delay(3000);
@@ -179,8 +189,14 @@ void loop (void) {
 				// Convert buffer to integer
 				uint8_t newE = atoi( commandBuffer );
 
-				triggerEvent = newE;
-				setTriggerEvent(newE);
+				if (newE == 4){
+					isContinuous = true;
+				}
+				else {
+					isContinuous = false;
+					triggerEvent = newE;
+					setTriggerEvent(newE);
+				}
 				}
 				break;
 
