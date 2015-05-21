@@ -12,4 +12,4 @@ data over usb serial to computer.
 
 It was tested on Arduino Uno and while a bit jittery it does work at ~150kHz.
 
-There are still some things to be improved, especially interface with PC.
+You can find the small-scope [shield](https://github.com/marvin-sinister/small-scope-electronics) and [software](https://github.com/marvin-sinister/small-scope-qt) in their repos.
